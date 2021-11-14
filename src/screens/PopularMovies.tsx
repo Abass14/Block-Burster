@@ -33,7 +33,7 @@ type RootStackParamList = {
 type Props = NativeStackScreenProps<RootStackParamList, 'Profile'>;
 
 
-export const PopularMovies = () =>{
+export const PopularMovies = () => {
   const navigation = useNavigation();
   const [movie, setMovie] = useState([]);
  
