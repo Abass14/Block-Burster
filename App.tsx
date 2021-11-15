@@ -40,19 +40,21 @@ const App = () => {
         screenOptions={({route}) =>({
           tabBarIcon: ({focused, color}) => {
             let icomName: string;
-            if(route.name === 'PopularMovies'){
-              icomName = 'autoprefixer';
-              color = focused? 'black' : 'red';
-            }else if(route.name === 'TopRated'){
-              icomName = 'bootstrap';
-              color = focused? 'black' : 'red';
+            if(route.name === 'Popular Movies'){
+              icomName = 'home';
+              color = focused? 'red' : 'white';
+            }else if(route.name === 'Top Movies'){
+              icomName = 'video';
+              color = focused? 'red' : 'white';
             }else{
-              icomName = ''
+              icomName = 'bookmark'
+              color = focused? 'red' : 'white';
             }
             return(
               <FontAwesome5
                 name={icomName}
                 color={color}
+                size={20}
               />
             )
           }
