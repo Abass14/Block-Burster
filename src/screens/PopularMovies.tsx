@@ -10,18 +10,21 @@ import {
   useColorScheme,
   View,
   FlatList,
-  Alert
+  Alert,
+  ToastAndroid
 } from 'react-native';
 import { MovieCard } from '../component/major/MovieCard';
 import { NativeStackScreenProps, createNativeStackNavigator } from '@react-navigation/native-stack';
 import { AppName } from '../component/mini/AppName';
 import {useNavigation} from '@react-navigation/native'
 import { Item } from 'react-native-paper/lib/typescript/components/List/List';
+import SQLite from 'react-native-sqlite-storage';
+import { DB } from '../database/FavoriteDb'
+import { createTable } from '../database/Tables'
 
 // type AuthStackParamList ={
 //   Details: undefined
 // }
-
 
 
 type RootStackParamList = {
@@ -31,14 +34,33 @@ type RootStackParamList = {
 };
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Profile'>;
-
+// async () => {
+//   try {
+//     await db.transaction(async (tx) =>{
+//       await tx.executeSql(
+//         "INSERT INTO Movies (Title, Image, Date, MovieID) VALUES (?,?,?,?)",
+//         [theMovie.item.title, theMovie.item.poster_path, theMovie.item.release_date, theMovie.item.id]
+//       )
+//     })
+//     ToastAndroid.showWithGravity(`Saved Successfully! ${theMovie.item.title}`, ToastAndroid.SHORT, ToastAndroid.CENTER)
+//     // Alert.alert(`Saved Successfully! ${theMovie.item.title}`)
+//   } catch (error) {
+//     console.log(error)
+//   }
+// }
 
 export const PopularMovies = () => {
   const navigation = useNavigation();
   const [movie, setMovie] = useState([]);
- 
-  const handleSave = () => {
-    Alert.alert('should save')
+
+  useEffect(() => {
+    getMovies();
+    createTable();
+  }, []);
+
+
+  const handleSave = async (movieTitle: string, movieImage: string, movieDate: string, movieId: number) => {
+     
   }
 
   const getMovies = async () => {
@@ -52,9 +74,6 @@ export const PopularMovies = () => {
     }
   }
 
-  useEffect(() => {
-    getMovies();
-  }, []);
 
     return(
       <View style={{backgroundColor: 'black', flex: 1}}>
@@ -77,9 +96,22 @@ export const PopularMovies = () => {
                   <MovieCard 
                     title={theMovie.item.title}
                     date={theMovie.item.release_date} 
-                  image={`https://image.tmdb.org/t/p/w342${theMovie.item.poster_path}`}
+                    image={`https://image.tmdb.org/t/p/w342${theMovie.item.poster_path}`}
                     handleMovieClick={() => navigation.navigate('Details', {movieId: theMovie.item.id})}
-                    handleSaveMovie={handleSave}
+                    handleSaveMovie={async () => {
+                      try {
+                        await DB.transaction(async (tx) =>{
+                          await tx.executeSql(
+                            "INSERT INTO Movies (Title, Image, Date, MovieID) VALUES (?,?,?,?)",
+                            [theMovie.item.title, theMovie.item.poster_path, theMovie.item.release_date, theMovie.item.id]
+                          )
+                        })
+                        ToastAndroid.showWithGravity(`Saved Successfully! ${theMovie.item.title}`, ToastAndroid.SHORT, ToastAndroid.CENTER)
+                        // Alert.alert(`Saved Successfully! ${theMovie.item.title}`)
+                      } catch (error) {
+                        console.log(error)
+                      }
+                    }}
                     iconName={true}
                   />
                 </View>
