@@ -1,10 +1,12 @@
-import SQLite from 'react-native-sqlite-storage'
+import { openDatabase } from 'react-native-sqlite-storage'
 
-export const DB = SQLite.openDatabase(
+export const DB = openDatabase(
     {
         name: 'FavoriteDb',
         location: 'default'
     },
-    () => {},
+    () => {console.log("db created")},
     error => console.log(error)
+    
 )
+

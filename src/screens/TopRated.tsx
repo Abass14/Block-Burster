@@ -26,10 +26,6 @@ type Props = NativeStackScreenProps<RootStackParamList, 'Profile'>;
 export const TopRated = () =>{
   const navigation = useNavigation();
   const [movie, setMovie] = useState([]);
-  const handleClick = () => {
-    // Alert.alert('should navigate')
-    navigation.navigate('Details')
-  }
   const handleSave = () => {
     Alert.alert('should save')
   }
