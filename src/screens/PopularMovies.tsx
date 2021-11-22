@@ -22,11 +22,6 @@ import SQLite from 'react-native-sqlite-storage';
 import { DB } from '../database/FavoriteDb'
 import { createTable } from '../database/Tables'
 
-// type AuthStackParamList ={
-//   Details: undefined
-// }
-
-
 type RootStackParamList = {
   Details: undefined;
   Profile: { userId: string };
@@ -34,20 +29,6 @@ type RootStackParamList = {
 };
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Profile'>;
-// async () => {
-//   try {
-//     await db.transaction(async (tx) =>{
-//       await tx.executeSql(
-//         "INSERT INTO Movies (Title, Image, Date, MovieID) VALUES (?,?,?,?)",
-//         [theMovie.item.title, theMovie.item.poster_path, theMovie.item.release_date, theMovie.item.id]
-//       )
-//     })
-//     ToastAndroid.showWithGravity(`Saved Successfully! ${theMovie.item.title}`, ToastAndroid.SHORT, ToastAndroid.CENTER)
-//     // Alert.alert(`Saved Successfully! ${theMovie.item.title}`)
-//   } catch (error) {
-//     console.log(error)
-//   }
-// }
 
 export const PopularMovies = () => {
   const navigation = useNavigation();
@@ -68,7 +49,7 @@ export const PopularMovies = () => {
       const response = await fetch('https://api.themoviedb.org/3/movie/popular?api_key=878ced4f74f38d8ebeccdcc96c9d94fb&language=en-US');
       const json = await response.json();
       setMovie(json.results);
-      console.log(json.results)
+      // console.log(json.results)
     } catch (error) {
       console.error(error)
     }
@@ -100,14 +81,21 @@ export const PopularMovies = () => {
                     handleMovieClick={() => navigation.navigate('Details', {movieId: theMovie.item.id})}
                     handleSaveMovie={async () => {
                       try {
-                        await DB.transaction(async (tx) =>{
-                          await tx.executeSql(
-                            "INSERT INTO Movies (Title, Image, Date, MovieID) VALUES (?,?,?,?)",
-                            [theMovie.item.title, theMovie.item.poster_path, theMovie.item.release_date, theMovie.item.id]
+                        await DB.transaction((tx) =>{
+                          tx.executeSql(
+                            'INSERT INTO Movies (Title, Image, Date, Id) VALUES (?,?,?,?)',
+                            [theMovie.item.title, theMovie.item.poster_path, theMovie.item.release_date, theMovie.item.id],
+                            (tx, result) =>{
+                              console.log("Result" + result.rowsAffected)
+                              if (result.rowsAffected > 0) {
+                                ToastAndroid.showWithGravity(`${theMovie.item.title} saved successfully`, ToastAndroid.SHORT, ToastAndroid.CENTER)
+                              }else{
+                                ToastAndroid.showWithGravity(`${theMovie.item.title} not saved`, ToastAndroid.SHORT, ToastAndroid.CENTER)
+                              }
+                            },
+                            error => console.log(error)
                           )
                         })
-                        ToastAndroid.showWithGravity(`Saved Successfully! ${theMovie.item.title}`, ToastAndroid.SHORT, ToastAndroid.CENTER)
-                        // Alert.alert(`Saved Successfully! ${theMovie.item.title}`)
                       } catch (error) {
                         console.log(error)
                       }

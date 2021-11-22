@@ -26,6 +26,7 @@ import { FavoriteMovies } from './src/screens/FavoriteMovies';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import {FirstScreenNavigator} from './src/screens/nested/FirstScreenNavigator'
 import { SecondScreenNavigator } from './src/screens/nested/SecondScreenNavigator';
+import { ThirdScreenNavigator } from './src/screens/nested/ThirdScreenNavigation';
 
 
 
@@ -72,8 +73,8 @@ const App = () => {
           component={SecondScreenNavigator}
         />
         <Tab.Screen 
-          name="Favorite Movies"
-          component={FavoriteMovies}
+          name="Third Movies"
+          component={ThirdScreenNavigator}
         />
       </Tab.Navigator>
     </NavigationContainer>
