@@ -1,6 +1,6 @@
 import { DB } from './FavoriteDb'
 
-export const createTable = () =>{
+export const createTable = () => {
     DB.transaction((tx) =>{
         tx.executeSql(
             "CREATE TABLE IF NOT EXISTS Movies (Title TEXT, Image TEXT, Date TEXT, Id INTEGER);",
