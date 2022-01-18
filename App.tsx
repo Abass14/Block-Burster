@@ -27,6 +27,8 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import {FirstScreenNavigator} from './src/screens/nested/FirstScreenNavigator'
 import { SecondScreenNavigator } from './src/screens/nested/SecondScreenNavigator';
 import { ThirdScreenNavigator } from './src/screens/nested/ThirdScreenNavigation';
+import { Provider } from 'react-redux';
+import { Store } from './src/redux/store';
 
 
 
@@ -36,48 +38,50 @@ const Stack = createNativeStackNavigator();
 
 const App = () => {
   return (
-    <NavigationContainer>
-      <Tab.Navigator
-        screenOptions={({route}) =>({
-          tabBarIcon: ({focused, color}) => {
-            let icomName: string;
-            if(route.name === 'Popular Movies'){
-              icomName = 'home';
-              color = focused? 'red' : 'white';
-            }else if(route.name === 'Top Movies'){
-              icomName = 'video';
-              color = focused? 'red' : 'white';
-            }else{
-              icomName = 'bookmark'
-              color = focused? 'red' : 'white';
+    <Provider store={Store}>
+      <NavigationContainer>
+        <Tab.Navigator
+          screenOptions={({route}) =>({
+            tabBarIcon: ({focused, color}) => {
+              let icomName: string;
+              if(route.name === 'Popular Movies'){
+                icomName = 'home';
+                color = focused? 'red' : 'white';
+              }else if(route.name === 'Top Movies'){
+                icomName = 'video';
+                color = focused? 'red' : 'white';
+              }else{
+                icomName = 'bookmark'
+                color = focused? 'red' : 'white';
+              }
+              return(
+                <FontAwesome5
+                  name={icomName}
+                  color={color}
+                  size={20}
+                />
+              )
             }
-            return(
-              <FontAwesome5
-                name={icomName}
-                color={color}
-                size={20}
-              />
-            )
-          }
-        })}
-        barStyle={{backgroundColor: 'black', borderWidth: 1, borderTopColor: 'red'}}
-        activeColor='red'
-        inactiveColor='white'
-      >
-        <Tab.Screen 
-          name="Popular Movies"
-          component={FirstScreenNavigator}
-        />
-        <Tab.Screen 
-          name="Top Movies"
-          component={SecondScreenNavigator}
-        />
-        <Tab.Screen 
-          name="Third Movies"
-          component={ThirdScreenNavigator}
-        />
-      </Tab.Navigator>
-    </NavigationContainer>
+          })}
+          barStyle={{backgroundColor: 'black', borderWidth: 1, borderTopColor: 'red'}}
+          activeColor='red'
+          inactiveColor='white'
+        >
+          <Tab.Screen 
+            name="Popular Movies"
+            component={FirstScreenNavigator}
+          />
+          <Tab.Screen 
+            name="Top Movies"
+            component={SecondScreenNavigator}
+          />
+          <Tab.Screen 
+            name="Third Movies"
+            component={ThirdScreenNavigator}
+          />
+        </Tab.Navigator>
+      </NavigationContainer>
+    </Provider>
   );
 };
 

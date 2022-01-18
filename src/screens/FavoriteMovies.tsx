@@ -1,65 +1,59 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef, useMemo} from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { getData } from '../redux/action';
 import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
   StyleSheet,
   Text,
-  useColorScheme,
   View,
+  Pressable,
   FlatList,
-  Alert
 } from 'react-native';
 import { MovieCard } from '../component/major/MovieCard';
 import { AppName } from '../component/mini/AppName';
 import { DB } from '../database/FavoriteDb'
 import {useNavigation} from '@react-navigation/native'
+import ProgressIndicator from '../component/mini/ProgressIndicator';
+import colors from '../assests/colors/colors';
 
 
 export const FavoriteMovies = () =>{
   const [movie, setMovie] = useState([]);
 
+  const {loading, result} = useSelector(state => state.dbReducer)
+  const dispatch = useDispatch()
+
   const navigation = useNavigation();
 
-  const getData = () => {
-    try {
-      DB.transaction((tx) =>{
-        tx.executeSql(
-          "SELECT * FROM Movies",
-          [],
-          (tx, res) => {
-            console.log(`The res: ${res.rows.length}`)
-            var len = res.rows.length
-            let results = []
-            if(len > 0){
-              for (let i = 0; i < len; i++) {
-                results.push(res.rows.item(i))
-              }
-              setMovie(results)
-            }
-            console.log(`result: ${results}`)
-          }
-        )
-        console.log(movie)
-      })
-    } catch (error) {
-      console.log(error)
-    }
-  }
+  useEffect(() => {
+    dispatch(getData())
+  }, [])
 
-  useEffect(() =>{
-    getData();
-  })
+  useEffect(() => {
+      dispatch(getData())
+      let res = []
+      var len = result.length
+      for (let i = 0; i < len; i++) {
+        res.push(result.item(i))
+      }
+      setMovie(res)
+  }, [result.length])
 
   const handleDelete = () =>{
 
   }
 
+  if (loading) {
+    return(
+      <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.BLACK}}>
+        <ProgressIndicator />
+      </View>
+    )
+  }else{
     return(
         <View style={{flex: 1, backgroundColor: 'black'}}>
-          <View style={{padding: 10, marginHorizontal: 10, marginTop: 30, borderWidth: 1, borderColor: 'red', borderRadius: 5}}>
+          <Pressable style={{padding: 10, marginHorizontal: 10, marginTop: 30, borderWidth: 1, borderColor: 'red', borderRadius: 5}}>
             <AppName />
-          </View>
+          </Pressable>
           <View>
             <Text style={styles.header}>Favorite Movies</Text>
           </View>
@@ -87,6 +81,7 @@ export const FavoriteMovies = () =>{
           </View>
         </View>
     )
+  }
 }
 
 const styles = StyleSheet.create({

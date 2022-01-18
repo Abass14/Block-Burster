@@ -14,6 +14,10 @@ import { MovieCard } from '../component/major/MovieCard';
 import { NativeStackScreenProps, createNativeStackNavigator } from '@react-navigation/native-stack';
 import { AppName } from '../component/mini/AppName';
 import {useNavigation} from '@react-navigation/native'
+import { useDispatch, useSelector } from 'react-redux';
+import { getTopMovies } from '../redux/action';
+import ProgressIndicator from '../component/mini/ProgressIndicator';
+import colors from '../assests/colors/colors';
 
 type RootStackParamList = {
   Details: undefined;
@@ -26,25 +30,24 @@ type Props = NativeStackScreenProps<RootStackParamList, 'Profile'>;
 export const TopRated = () =>{
   const navigation = useNavigation();
   const [movie, setMovie] = useState([]);
+  const {loading, topMovies} = useSelector(state => state.movieReducer)
+  const dispatch = useDispatch()
+
   const handleSave = () => {
     Alert.alert('should save')
   }
 
-  const getMovies = async () => {
-    try {
-      const response = await fetch('https://api.themoviedb.org/3/movie/top_rated?api_key=878ced4f74f38d8ebeccdcc96c9d94fb&language=en-US&page=1');
-      const json = await response.json();
-        setMovie(json.results);
-      console.log(movie)
-    } catch (error) {
-      console.error(error)
-    }
-  }
-
   useEffect(() => {
-    getMovies();
+    dispatch(getTopMovies())
   }, []);
 
+  if (loading) {
+    return(
+      <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.BLACK}}>
+        <ProgressIndicator />
+      </View>
+    )
+  }else{
     return(
       <View style={styles.view}>
           <View style={{padding: 10, marginHorizontal: 10, marginTop: 30, borderWidth: 1, borderColor: 'red', borderRadius: 5}}>
@@ -57,14 +60,14 @@ export const TopRated = () =>{
             <FlatList 
               style={{width: '100%', marginBottom: 160}}
               keyExtractor={(item: any, index: number)=>index.toString()}
-              data={movie}
+              data={topMovies}
               numColumns={2}
               renderItem={theMovie =>(
                 <View style={{margin: 10, flex: 1}}>
                   <MovieCard 
                     title={theMovie.item.title}
                     date={theMovie.item.release_date} 
-                  image={`https://image.tmdb.org/t/p/w342${theMovie.item.poster_path}`}
+                    image={`https://image.tmdb.org/t/p/w342${theMovie.item.poster_path}`}
                     handleMovieClick={() =>  navigation.navigate('Details', {movieId: theMovie.item.id})}
                     handleSaveMovie={handleSave}
                     iconName={true}
@@ -77,6 +80,7 @@ export const TopRated = () =>{
       </View>
         
     )
+  }
 }
 
 const styles = StyleSheet.create({
