@@ -13,6 +13,7 @@ import { AppName } from '../component/mini/AppName';
 import { DB } from '../database/FavoriteDb'
 import {useNavigation} from '@react-navigation/native'
 import ProgressIndicator from '../component/mini/ProgressIndicator';
+import colors from '../assests/colors/colors';
 
 
 export const FavoriteMovies = () =>{
@@ -43,7 +44,7 @@ export const FavoriteMovies = () =>{
 
   if (loading) {
     return(
-      <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+      <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.BLACK}}>
         <ProgressIndicator />
       </View>
     )

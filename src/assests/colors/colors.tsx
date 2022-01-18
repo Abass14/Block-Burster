@@ -5,7 +5,7 @@ export default {
     DANGER: '#ff3d00',
     SUCCESS: '#43a047',
     WHITE: '#FFFFFF',
-    BLACK: '000000',
+    BLACK: '#000000',
     GREY: '#bdbdbd',
     ACCENT: '#4895EF',
     LIGHT_RED: '#ffccbc',

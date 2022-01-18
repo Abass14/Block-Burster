@@ -5,7 +5,7 @@ import colors from '../../assests/colors/colors'
 function ProgressIndicator() {
     return (
         <View>
-            <ActivityIndicator size="large" color={colors.SUCCESS} />
+            <ActivityIndicator size="large" color={colors.DANGER} />
         </View>
     )
 }

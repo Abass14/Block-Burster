@@ -17,6 +17,7 @@ import {useNavigation} from '@react-navigation/native'
 import { useDispatch, useSelector } from 'react-redux';
 import { getTopMovies } from '../redux/action';
 import ProgressIndicator from '../component/mini/ProgressIndicator';
+import colors from '../assests/colors/colors';
 
 type RootStackParamList = {
   Details: undefined;
@@ -42,7 +43,7 @@ export const TopRated = () =>{
 
   if (loading) {
     return(
-      <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+      <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.BLACK}}>
         <ProgressIndicator />
       </View>
     )

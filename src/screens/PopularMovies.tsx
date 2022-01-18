@@ -22,6 +22,7 @@ import { getPopularMovies, handleSaveToDb } from '../redux/action';
 import { DB } from '../database/FavoriteDb'
 import { createTable } from '../database/Tables'
 import ProgressIndicator from '../component/mini/ProgressIndicator';
+import colors from '../assests/colors/colors';
 
 type RootStackParamList = {
   Details: undefined;
@@ -61,7 +62,7 @@ export const PopularMovies = () => {
 
   if (loading) {
     return (
-      <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+      <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.BLACK}}>
           <ProgressIndicator />
       </View>
     )

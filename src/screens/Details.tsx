@@ -18,6 +18,7 @@ import {
 import { Card } from 'react-native-paper';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { useDispatch, useSelector } from 'react-redux';
+import colors from '../assests/colors/colors';
 import { Videos } from '../component/major/Video';
 import ProgressIndicator from '../component/mini/ProgressIndicator';
 import { getMovieDetail } from '../redux/action';
@@ -48,7 +49,7 @@ export const Details = ({ navigation, route }) =>{
 
   if (loading) {
     return(
-      <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+      <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.BLACK}}>
         <ProgressIndicator />
       </View>
     )

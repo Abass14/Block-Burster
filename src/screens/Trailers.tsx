@@ -10,6 +10,7 @@ import {
   FlatList
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
+import colors from '../assests/colors/colors';
 import { MovieCard } from '../component/major/MovieCard';
 import { Videos } from '../component/major/Video';
 import { AppName } from '../component/mini/AppName';
@@ -32,7 +33,7 @@ export const Trailers = ( { route }) =>{
 
   if (loading) {
     return(
-      <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+      <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.BLACK}}>
         <ProgressIndicator />
       </View>
     )
