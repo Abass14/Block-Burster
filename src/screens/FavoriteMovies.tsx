@@ -1,4 +1,6 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef, useMemo} from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { getData } from '../redux/action';
 import {
   SafeAreaView,
   ScrollView,
@@ -7,8 +9,10 @@ import {
   Text,
   useColorScheme,
   View,
+  Pressable,
   FlatList,
-  Alert
+  Alert,
+  ToastAndroid
 } from 'react-native';
 import { MovieCard } from '../component/major/MovieCard';
 import { AppName } from '../component/mini/AppName';
@@ -18,48 +22,41 @@ import {useNavigation} from '@react-navigation/native'
 
 export const FavoriteMovies = () =>{
   const [movie, setMovie] = useState([]);
+  const [refresh, setRefresh] = useState(false)
 
+  const {result} = useSelector(state => state.dbReducer)
+  console.log(result, "RESULT FROM DB SAVE")
+  const dispatch = useDispatch()
   const navigation = useNavigation();
 
-  const getData = () => {
-    try {
-      DB.transaction((tx) =>{
-        tx.executeSql(
-          "SELECT * FROM Movies",
-          [],
-          (tx, res) => {
-            console.log(`The res: ${res.rows.length}`)
-            var len = res.rows.length
-            let results = []
-            if(len > 0){
-              for (let i = 0; i < len; i++) {
-                results.push(res.rows.item(i))
-              }
-              setMovie(results)
-            }
-            console.log(`result: ${results}`)
-          }
-        )
-        console.log(movie)
-      })
-    } catch (error) {
-      console.log(error)
-    }
+  useEffect(() => {
+    dispatch(getData())
+  }, [])
+
+  useEffect(() => {
+      dispatch(getData())
+      let res = []
+      var len = result.length
+      for (let i = 0; i < len; i++) {
+        res.push(result.item(i))
+      }
+      setMovie(res)
+  }, [result.length])
+
+  const handleClk = () =>{
+    setRefresh(prevState => !prevState)
+    console.log(`${refresh}`)
+    ToastAndroid.showWithGravity("clicked", ToastAndroid.SHORT, ToastAndroid.BOTTOM)
   }
-
-  useEffect(() =>{
-    getData();
-  })
-
   const handleDelete = () =>{
 
   }
 
     return(
         <View style={{flex: 1, backgroundColor: 'black'}}>
-          <View style={{padding: 10, marginHorizontal: 10, marginTop: 30, borderWidth: 1, borderColor: 'red', borderRadius: 5}}>
+          <Pressable onPress={handleClk} style={{padding: 10, marginHorizontal: 10, marginTop: 30, borderWidth: 1, borderColor: 'red', borderRadius: 5}}>
             <AppName />
-          </View>
+          </Pressable>
           <View>
             <Text style={styles.header}>Favorite Movies</Text>
           </View>

@@ -35,7 +35,7 @@ export const TopRated = () =>{
       const response = await fetch('https://api.themoviedb.org/3/movie/top_rated?api_key=878ced4f74f38d8ebeccdcc96c9d94fb&language=en-US&page=1');
       const json = await response.json();
         setMovie(json.results);
-      console.log(movie)
+      console.log("Top movie: " + json)
     } catch (error) {
       console.error(error)
     }
