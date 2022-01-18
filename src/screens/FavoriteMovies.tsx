@@ -2,31 +2,25 @@ import React, {useState, useEffect, useRef, useMemo} from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { getData } from '../redux/action';
 import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
   StyleSheet,
   Text,
-  useColorScheme,
   View,
   Pressable,
   FlatList,
-  Alert,
-  ToastAndroid
 } from 'react-native';
 import { MovieCard } from '../component/major/MovieCard';
 import { AppName } from '../component/mini/AppName';
 import { DB } from '../database/FavoriteDb'
 import {useNavigation} from '@react-navigation/native'
+import ProgressIndicator from '../component/mini/ProgressIndicator';
 
 
 export const FavoriteMovies = () =>{
   const [movie, setMovie] = useState([]);
-  const [refresh, setRefresh] = useState(false)
 
-  const {result} = useSelector(state => state.dbReducer)
-  console.log(result, "RESULT FROM DB SAVE")
+  const {loading, result} = useSelector(state => state.dbReducer)
   const dispatch = useDispatch()
+
   const navigation = useNavigation();
 
   useEffect(() => {
@@ -43,18 +37,20 @@ export const FavoriteMovies = () =>{
       setMovie(res)
   }, [result.length])
 
-  const handleClk = () =>{
-    setRefresh(prevState => !prevState)
-    console.log(`${refresh}`)
-    ToastAndroid.showWithGravity("clicked", ToastAndroid.SHORT, ToastAndroid.BOTTOM)
-  }
   const handleDelete = () =>{
 
   }
 
+  if (loading) {
+    return(
+      <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+        <ProgressIndicator />
+      </View>
+    )
+  }else{
     return(
         <View style={{flex: 1, backgroundColor: 'black'}}>
-          <Pressable onPress={handleClk} style={{padding: 10, marginHorizontal: 10, marginTop: 30, borderWidth: 1, borderColor: 'red', borderRadius: 5}}>
+          <Pressable style={{padding: 10, marginHorizontal: 10, marginTop: 30, borderWidth: 1, borderColor: 'red', borderRadius: 5}}>
             <AppName />
           </Pressable>
           <View>
@@ -84,6 +80,7 @@ export const FavoriteMovies = () =>{
           </View>
         </View>
     )
+  }
 }
 
 const styles = StyleSheet.create({

@@ -38,11 +38,16 @@ export const PopularMovies = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
 
+  const [currentPage, setCurrentPage] = useState(1)
+
+  const loadMore = () => {
+    setCurrentPage(currentPage + 1)
+}
+
   useEffect(() => {
     createTable();
-    dispatch(getPopularMovies());
-  }, []);
-
+    dispatch(getPopularMovies(currentPage));
+  }, [currentPage]);
 
   const handleSave = (movieTitle: string, movieImage: string, movieDate: string, movieId: number) => {
     console.log(`DB SAVE clicked FROM UI`)
@@ -90,6 +95,8 @@ export const PopularMovies = () => {
                 </View>
                 )
               }
+              onEndReached={loadMore}
+              onEndReachedThreshold={0.5}
             />
           </View>
           

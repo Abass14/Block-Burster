@@ -13,20 +13,16 @@ const BASE_URL = "https://api.themoviedb.org/3/movie/"
 const GET_POPULAR_MOVIES_API = "popular?api_key=878ced4f74f38d8ebeccdcc96c9d94fb&language=en-US"
 const GET_DETAILS_API = "?api_key=878ced4f74f38d8ebeccdcc96c9d94fb&language=en-US"
 
-export const getPopularMovies = () =>{
-    console.log("response")
+export const getPopularMovies = (currentPage) =>{
     try {
         return async dispatch => {
-            console.log("succ")
-            const result = await fetch('https://api.themoviedb.org/3/movie/popular?api_key=878ced4f74f38d8ebeccdcc96c9d94fb&language=en-US')
+            const result = await fetch(`https://api.themoviedb.org/3/movie/popular?api_key=878ced4f74f38d8ebeccdcc96c9d94fb&language=en-US&page=${currentPage}`)
             const response = await result.json()
-            console.log("yay")
             if (response) {
                 dispatch({
                     type: GET_POPULAR_MOVIES,
                     payload: response.results
                 })
-                console.log("success " + result)
             } else {
                 console.log("Unable to fetch movies")
             }
@@ -37,13 +33,61 @@ export const getPopularMovies = () =>{
     }
 }
 
+export const getTopMovies = () => {
+  try {
+    return async dispatch => {
+      const response = await fetch('https://api.themoviedb.org/3/movie/top_rated?api_key=878ced4f74f38d8ebeccdcc96c9d94fb&language=en-US&page=1');
+      const json = await response.json();
+      if (json) {
+        dispatch({
+          type: GET_TOP_RATED,
+          payload: json.results
+        })
+      }
+    }
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+export const getMovieDetail = (movieId) => {
+  try {
+    return async dispatch => {
+      const response = await fetch(`https://api.themoviedb.org/3/movie/${JSON.stringify(movieId)}?api_key=878ced4f74f38d8ebeccdcc96c9d94fb&language=en-US`);
+      const json = await response.json();
+      if (json) {
+        dispatch({
+          type: GET_DETAILS,
+          payload: json
+        })
+      }
+    }
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+export const getTrailers = (id) => {
+  try {
+    return async dispatch => {
+      const response = await fetch(`https://api.themoviedb.org/3/movie/${id}/videos?api_key=878ced4f74f38d8ebeccdcc96c9d94fb&language=en-US`);
+      const json = await response.json();
+      if (json) {
+        dispatch({
+          type: GET_TRAILERS,
+          payload: json.results
+        })
+      }
+    }
+  } catch (error) {
+    console.error(error)
+  }
+}
+
 export const handleSaveToDb = (movieTitle, movieImage, movieDate, movieId) => {
-  console.log("DB SAVE ENTERED FROM ACTION")
     try {
       return async dispatch => {
-        console.log("DB SAVE ENTERED FROM ACTION DISPATCH")
         await DB.transaction((tx) =>{
-          console.log("DB SAVE ENTERED FROM ACTION TRANSACTION")
             tx.executeSql(
               'INSERT INTO Movies (Title, Image, Date, Id) VALUES (?,?,?,?)',
               [movieTitle, movieImage, movieDate, movieId],
@@ -54,8 +98,6 @@ export const handleSaveToDb = (movieTitle, movieImage, movieDate, movieId) => {
                         type: SAVE_MOVIE_TO_DB,
                         payload: result.rows
                     })
-                    console.log(`DB RESULT ==== ${result.rows.length}`)
-                    console.log(result.rows, "DB SAVE ENTERED FROM ACTION SUCCESSFUL")
                 }else{
                     console.log("DB SAVE ENTERED FROM ACTION FAILED")
                 }
@@ -71,32 +113,24 @@ export const handleSaveToDb = (movieTitle, movieImage, movieDate, movieId) => {
   }
 
   export const getData = () => {
-    console.log("DB GETDATA FROM ACTION ENTERED")
     try {
-      console.log("DB GETDATA FROM ACTION TRY ENTERED")
       return async dispatch => {
-        console.log("DB GETDATA FROM ACTION DISPATCH ENTERED")
         await DB.transaction((tx) =>{
-          console.log("DB GETDATA FROM ACTION TRANSACTION ENTERED")
             tx.executeSql(
               "SELECT * FROM Movies",
               [],
               (tx, res) => {
-                console.log(`The res: ${res.rows.length}`)
                 var len = res.rows.length
                 if (res && len > 0) {
                     dispatch({
                         type: GET_MOVIE_FROM_DB,
                         payload: res.rows
                     })
-                    console.log(res.rows.item, "DB DATA FETCH SUCCESS")
                 }else{
                     console.log("DB DATA FETCH FAILED")
                 }
               }
             )
-            console.log("yayayayaay5")
-            console.log("movie: ")
           })
       }
     } catch (error) {
