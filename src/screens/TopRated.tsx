@@ -32,6 +32,7 @@ export const TopRated = () =>{
   const [movie, setMovie] = useState([]);
   const {loading, topMovies} = useSelector(state => state.movieReducer)
   const dispatch = useDispatch()
+  const [isLoading, setIsLoading] = useState(true)
 
   const handleSave = () => {
     Alert.alert('should save')
@@ -39,9 +40,12 @@ export const TopRated = () =>{
 
   useEffect(() => {
     dispatch(getTopMovies())
-  }, []);
+    if (topMovies.length > 1) {
+      setIsLoading(false)
+    }
+  }, [topMovies.length]);
 
-  if (loading) {
+  if (isLoading) {
     return(
       <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.BLACK}}>
         <ProgressIndicator />

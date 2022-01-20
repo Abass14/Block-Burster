@@ -35,7 +35,7 @@ export const FavoriteMovies = () =>{
       for (let i = 0; i < len; i++) {
         res.push(result.item(i))
       }
-      setMovie(res)
+      setMovie(res.reverse())
   }, [result.length])
 
   const handleDelete = () =>{

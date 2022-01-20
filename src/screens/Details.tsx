@@ -42,12 +42,20 @@ export const Details = ({ navigation, route }) =>{
   const {loading, movieDetails} = useSelector(state => state.movieReducer)
   const dispacth = useDispatch()
 
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    if (movieDetails) {
+      setIsLoading(false)
+    }
+  }, [movieDetails]);
+
   useEffect(() => {
     dispacth(getMovieDetail(movieId))
-  }, []);
+  }, [])
   const screenHeight = Dimensions.get('window').height
 
-  if (loading) {
+  if (isLoading) {
     return(
       <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.BLACK}}>
         <ProgressIndicator />
@@ -57,29 +65,29 @@ export const Details = ({ navigation, route }) =>{
     return(
       <ScrollView style={{height: screenHeight}}>
         <View style={styles.imageView}>
-          <ImageBackground style={styles.image} source={{uri: `https://image.tmdb.org/t/p/w342${movieDetails.poster_path}`}}>
-            <Text style={styles.backgroundTxt}>{movieDetails.original_title}</Text>
-            <Pressable onPress={() => {navigation.navigate("Trailers", { id: movieDetails.id})}} style={styles.playBtn}>
+          <ImageBackground style={styles.image} source={{uri: `https://image.tmdb.org/t/p/w342${movieDetails?.poster_path}`}}>
+            <Text style={styles.backgroundTxt}>{movieDetails?.original_title}</Text>
+            <Pressable onPress={() => {navigation.navigate("Trailers", { id: movieDetails?.id})}} style={styles.playBtn}>
               <FontAwesome5 name="play" size={50} color='white' />
             </Pressable>
           </ImageBackground>
         </View>
         <View style={styles.detailsView}>
           <Text style={styles.overview}>
-            {movieDetails.overview}
+            {movieDetails?.overview}
           </Text>
         </View>
         <View style={styles.column}>
           <Card style={{width: 150, height: 200, margin: 15, borderRadius: 5, overflow: 'hidden'}}>
-            <Image style={{width: '100%', height: 200, resizeMode: 'cover'}} source={{uri: `https://image.tmdb.org/t/p/w342${movieDetails.backdrop_path}`}} />
+            <Image style={{width: '100%', height: 200, resizeMode: 'cover'}} source={{uri: `https://image.tmdb.org/t/p/w342${movieDetails?.backdrop_path}`}} />
           </Card>
           <View style={{justifyContent: 'space-between', margin: 15}}>
-            <Text style={styles.detailsTxt}>Release Date: {movieDetails.release_date}</Text>
-            <Text style={styles.detailsTxt}>Status: {movieDetails.status}</Text>
-            <Text style={styles.detailsTxt}>Language: {movieDetails.original_language}</Text>
-            <Text style={styles.detailsTxt}>Popularity: {movieDetails.popularity}</Text>
-            <Text style={styles.detailsTxt}>Rating: {movieDetails.vote_average}</Text>
-            <Text style={styles.detailsTxt}>Revenue: {movieDetails.revenue}</Text>
+            <Text style={styles.detailsTxt}>Release Date: {movieDetails?.release_date}</Text>
+            <Text style={styles.detailsTxt}>Status: {movieDetails?.status}</Text>
+            <Text style={styles.detailsTxt}>Language: {movieDetails?.original_language}</Text>
+            <Text style={styles.detailsTxt}>Popularity: {movieDetails?.popularity}</Text>
+            <Text style={styles.detailsTxt}>Rating: {movieDetails?.vote_average}</Text>
+            <Text style={styles.detailsTxt}>Revenue: {movieDetails?.revenue}</Text>
           </View>
         </View>
         <Modal
