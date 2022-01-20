@@ -34,7 +34,7 @@ type Props = NativeStackScreenProps<RootStackParamList, 'Profile'>;
 
 export const PopularMovies = () => {
 
-  const {loading, popularMovies} = useSelector(state => state.movieReducer)
+  const {loading, popularMovies, movieDetails} = useSelector(state => state.movieReducer)
   const {result} = useSelector(state => state.dbReducer)
   const dispatch = useDispatch();
   const navigation = useNavigation();
@@ -48,7 +48,7 @@ export const PopularMovies = () => {
   useEffect(() => {
     createTable();
     dispatch(getPopularMovies(currentPage));
-  }, [currentPage]);
+  }, [currentPage, movieDetails]);
 
   const handleSave = (movieTitle: string, movieImage: string, movieDate: string, movieId: number) => {
     console.log(`DB SAVE clicked FROM UI`)

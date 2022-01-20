@@ -5,7 +5,7 @@ const initialState = {
     loading: true,
     popularMovies: [],
     topMovies: [],
-    movieDetails: {},
+    movieDetails: null,
     movieTrailers: []
 }
 
